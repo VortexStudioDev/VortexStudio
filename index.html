@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Roblox Giriş Ekranı Scripti</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Roblox Giriş Ekranı Scripti</h1>
+        <p>Aşağıdaki butona tıklayarak giriş ekranı scriptini kopyalayabilirsiniz.</p>
+        <textarea id="scriptBox" readonly>
+local tweenService = game:GetService("TweenService")
+local introFrame = script.Parent
+local screenGui = introFrame.Parent
+local textLabel = introFrame:FindFirstChild("TextLabel") -- TextLabel'ı bul
+
+-- GUI'nin tekrar açılmasını engelle
+screenGui.ResetOnSpawn = false
+
+-- Oyuncunun daha önce giriş ekranını görüp görmediğini kontrol etmek için bir değer oluşturuyoruz
+if game.Players.LocalPlayer:FindFirstChild("HasSeenIntro") then
+    introFrame.Visible = false -- Eğer oyuncu zaten giriş ekranını gördüyse gizle
+    return
+else
+    local seenValue = Instance.new("BoolValue")
+    seenValue.Name = "HasSeenIntro"
+    seenValue.Parent = game.Players.LocalPlayer
+end
+
+-- Başlangıçta ekran tam görünür olsun
+introFrame.BackgroundTransparency = 0
+introFrame.Visible = true
+if textLabel then textLabel.Visible = true end -- TextLabel'ı görünür yap
+
+-- Animasyon ayarları
+local frameTweenInfo = TweenInfo.new(2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
+local goalFrame = {BackgroundTransparency = 1}
+
+-- Frame için animasyonu oluştur
+local fadeOutFrame = tweenService:Create(introFrame, frameTweenInfo, goalFrame)
+
+-- 3 saniye bekle, sonra TextLabel’ı gizle, ardından Frame kaybolmaya başlasın
+wait(3)
+if textLabel then textLabel.Visible = false end -- TextLabel, Frame'den önce kayboluyor
+wait(0.5) -- Yarım saniye sonra Frame kaybolmaya başlıyor
+fadeOutFrame:Play()
+fadeOutFrame.Completed:Wait()
+introFrame.Visible = false
+        </textarea>
+        <button onclick="copyScript()">📋 Kopyala</button>
+        <p id="status"></p>
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+</html>
